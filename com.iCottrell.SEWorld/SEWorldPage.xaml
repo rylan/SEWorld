@@ -39,8 +39,8 @@
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton IconUri="/img/appbar.share.rest.png" Text="Share"/>
-            <shell:ApplicationBarIconButton IconUri="/img/appbar.favs.addto.rest.png" Text="Important"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Read Later"/>
+            <shell:ApplicationBarIconButton x:Name="Important" IconUri="/img/appbar.favs.addto.rest.png" Text="Important"/>
+            <shell:ApplicationBarIconButton x:Name="ReadLater" IconUri="/img/readlater48.png" Text="Read Later"/>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="Open in web browser" Click="OpenInBrowser"/>
                 <shell:ApplicationBarMenuItem Text="Report Bug" Click="EmailDev_Tap"/>
