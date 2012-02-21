@@ -1,0 +1,115 @@
+﻿<phone:PhoneApplicationPage 
+    x:Class="com.iCottrell.SEWorld.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="728" 
+    d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
+    shell:SystemTray.IsVisible="False">
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+ 
+        <!--Panorama control-->
+        <controls:Panorama Title="SEWorld">
+            <controls:Panorama.Background>
+                <ImageBrush ImageSource="img/background.png"/>
+            </controls:Panorama.Background>
+ 
+            <!--Panorama latest news-->
+            <controls:PanoramaItem Header="news">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <ProgressBar Grid.Row="0" Name="Loading" IsIndeterminate="True" Visibility="Collapsed"/>
+                    <!--Double line list with text wrapping-->
+                    <ListBox Grid.Row="1" Margin="0,0,-12,0" ItemsSource="{Binding RSSItems}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,0,0,10" Tag="{Binding URL}" Width="432" DoubleTap="saveForLater" Tap="openRSSItem">
+                                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap"  Loaded="textLoaded" Tag="{Binding Read}" Style="{StaticResource PhoneTextNormalStyle}" FontWeight="Bold"  />
+                                    <!--<TextBlock Text="{Binding Description}" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>-->
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </controls:PanoramaItem>
+ 
+            <!--Panorama favorites-->
+            <controls:PanoramaItem Header="favorite">
+                <!--Double line list with image placeholder and text wrapping-->
+                <ListBox Margin="0,0,-12,0" ItemsSource="{Binding FavoriteItems}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,17">
+                                <!--Replace rectangle with image-->
+                                <Rectangle Height="100" Width="100" Fill="#FFE5001b" Margin="12,0,9,0"/>
+                                <StackPanel Width="311">
+                                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </controls:PanoramaItem>
+
+            <!--Panorama read later-->
+            <controls:PanoramaItem Header="read later">
+                <!--Double line list with text wrapping-->
+                <ListBox Margin="0,0,-12,0" ItemsSource="{Binding RLItems}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="0,0,0,17" Width="432" Height="78">
+                                <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </controls:PanoramaItem>
+
+            <!--Panorama search-->
+            <controls:PanoramaItem Header="search">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <StackPanel Orientation="Horizontal" Grid.Row="0">
+                        <TextBox Name="SearchBox" Width="300" Height="78"  KeyDown="search_KeyDown"/>
+                        <Button Name="SearchButton" Content="Search" Height="78" Click="searchButton_Click" />
+                    </StackPanel>
+                    <ListBox Grid.Row="1" Margin="0,0,-12,0" ItemsSource="{Binding SearchItems}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,0,0,17" Width="432" Height="78">
+                                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}"/>
+                             </StackPanel>
+                         </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </controls:PanoramaItem>
+        </controls:Panorama>
+    </Grid>
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="Settings"/>
+                <shell:ApplicationBarMenuItem Text="About"/>
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+</phone:PhoneApplicationPage>
