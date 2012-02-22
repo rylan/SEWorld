@@ -82,13 +82,13 @@ namespace com.iCottrell.SEWorld
             }
         }
 
-        private void saveForLater(object sender, GestureEventArgs e)
+        private void saveForLater(object sender, System.Windows.Input.GestureEventArgs e)
         {
             string url = (string)((StackPanel)sender).Tag;
             App.ViewModel.setLaterByURL(url);
         }
 
-        private void openRSSItem(object sender, GestureEventArgs e)
+        private void openRSSItem(object sender, System.Windows.Input.GestureEventArgs e)
         {
             string title = "";
             string url = "";
@@ -127,13 +127,23 @@ namespace com.iCottrell.SEWorld
            
         }
 
-        private void removeStarred(object sender, GestureEventArgs e)
+        private void removeStarred(object sender, System.Windows.Input.GestureEventArgs e)
         {
             if (sender is Rectangle)
             {
                 String url = (string)((Rectangle)sender).Tag;
                 App.ViewModel.setStarredByURL(url);
             }
+        }
+
+        private void OpenAbout(object sender, EventArgs e)
+        {
+            this.NavigationService.Navigate(new Uri("/About.xaml", UriKind.Relative));
+        }
+
+        private void OpenSettings(object sender, EventArgs e)
+        {
+            this.NavigationService.Navigate(new Uri("/Settings.xaml", UriKind.Relative));
         }
 
     }

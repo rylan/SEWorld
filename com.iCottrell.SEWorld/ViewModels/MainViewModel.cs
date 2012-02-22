@@ -202,6 +202,7 @@ namespace com.iCottrell.SEWorld
            }
            foreach (RSSItem ri in tmpItems.OrderByDescending(x => x.Updated))
            {
+               /*
                if (removeRead)
                {
                    if (!ri.Starred && !ri.Read && !ri.Read)
@@ -211,9 +212,9 @@ namespace com.iCottrell.SEWorld
 
                }
                else
-               {
+               {*/
                    this.RSSItems.Add(ri);
-               }
+               //}
            }
                
            tmpItems.Clear();

@@ -30,24 +30,11 @@
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
-                <toolkit:ToggleSwitch Header="Removal Read Articles" IsChecked="False" x:Name="Removal" Checked="RecordChecked" Unchecked="RecordUnChecked" />
+                <toolkit:ToggleSwitch Header="Removal Read Articles on Close" IsChecked="False" x:Name="Removal" Checked="RecordChecked" Unchecked="RecordUnChecked" />
                 <TextBlock TextWrapping="Wrap" Text="Doesn't effect articles that are marked as starred or read later." Style="{StaticResource PhoneTextSmallStyle}" />
             </StackPanel>
             
             
         </Grid>
     </Grid>
- 
-    <!--Sample code showing usage of ApplicationBar-->
-    <!--<phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Button 2"/>
-            <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
-                <shell:ApplicationBarMenuItem Text="MenuItem 2"/>
-            </shell:ApplicationBar.MenuItems>
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>-->
-
 </phone:PhoneApplicationPage>
