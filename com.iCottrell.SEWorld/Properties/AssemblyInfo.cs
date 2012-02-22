@@ -9,9 +9,9 @@ using System.Resources;
 [assembly: AssemblyTitle("com.iCottrell.SEWorld")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Hewlett-Packard")]
+[assembly: AssemblyCompany("iCottrell.com")]
 [assembly: AssemblyProduct("com.iCottrell.SEWorld")]
-[assembly: AssemblyCopyright("Copyright © Hewlett-Packard 2012")]
+[assembly: AssemblyCopyright("Copyright © iCottrell.com 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

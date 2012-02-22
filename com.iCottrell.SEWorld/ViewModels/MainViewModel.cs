@@ -86,9 +86,13 @@ namespace com.iCottrell.SEWorld
                 {
                     if(removeRead)
                     {
-                        if(!ri.Starred && !ri.Read && !ri.Read)
+                        if(!ri.Read)
                         {
-                            this.RSSItems.Add(ri); 
+                            this.RSSItems.Add(ri);
+                        }
+                        else if (ri.Starred || ri.Later)
+                        {
+                            this.RSSItems.Add(ri);
                         }
 
                     }
@@ -132,7 +136,7 @@ namespace com.iCottrell.SEWorld
                     {
                         lastUpdated = (DateTime) settings[RSS_UPDATED]; 
                     }
-                    DateTime min = DateTime.MinValue;
+                   
                     foreach (XElement result in resultXml.Descendants(web + "entry"))
                     {
                         RSSItem item = new RSSItem();
@@ -156,21 +160,17 @@ namespace com.iCottrell.SEWorld
                         }
                         if (item.Updated.CompareTo(lastUpdated) > 0)
                         {
-                            if (item.Updated.CompareTo(min) > 0)
-                            {
-                                min = item.Updated;
-                            }
-                            tmp.Add(item);
+                           tmp.Add(item);
                         }
                         
                     }
                     if (!settings.Contains(RSS_UPDATED))
                     {
-                        settings.Add(RSS_UPDATED, min);
+                        settings.Add(RSS_UPDATED, DateTime.Now);
                     }
                     else
                     {
-                        settings[RSS_UPDATED] = min;
+                        settings[RSS_UPDATED] = DateTime.Now;
                     }
 
                     foreach (RSSItem ri in tmp.OrderByDescending(x => x.Updated))
@@ -202,19 +202,7 @@ namespace com.iCottrell.SEWorld
            }
            foreach (RSSItem ri in tmpItems.OrderByDescending(x => x.Updated))
            {
-               /*
-               if (removeRead)
-               {
-                   if (!ri.Starred && !ri.Read && !ri.Read)
-                   {
-                       this.RSSItems.Add(ri);
-                   }
-
-               }
-               else
-               {*/
-                   this.RSSItems.Add(ri);
-               //}
+               this.RSSItems.Add(ri);
            }
                
            tmpItems.Clear();

@@ -171,50 +171,60 @@ namespace com.iCottrell.SEWorld
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            
             if (DeviceNetworkInformation.IsNetworkAvailable)
             {
                 string external = "";
-                if (NavigationContext.QueryString.TryGetValue("external", out external))
+                if (e.NavigationMode == System.Windows.Navigation.NavigationMode.Back && NavigationContext.QueryString.TryGetValue("external", out external))
                 {
-                    string url = "";
-                    if (NavigationContext.QueryString.TryGetValue("href", out url))
-                    {
-                        WebBrowserTask task = new WebBrowserTask();
-                        task.Uri = new Uri(url);
-                        task.Show();
-                        NavigationService.RemoveBackEntry();
-                    }
+                    NavigationService.GoBack();
                 }
                 else
                 {
-
-                    string url = "";
-                    if (NavigationContext.QueryString.TryGetValue("href", out url))
+                   
+                    if (NavigationContext.QueryString.TryGetValue("external", out external))
                     {
-                        CurrentPage = url;
-                        CurrentItem = App.ViewModel.getItemByURL(url);
-                        CurrentItem.Read = true;
-                        if (CurrentItem.Later)
+                        string url = "";
+                        if (NavigationContext.QueryString.TryGetValue("href", out url))
                         {
-                            ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[2];
-                            btn.IconUri = new Uri("/img/readlater48.png", UriKind.Relative);
-                        }
-                        if (CurrentItem.Starred)
-                        {
-                            ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[1];
-                            btn.IconUri = new Uri("/img/appbar.favs.rest.png", UriKind.Relative);
+
+                            WebBrowserTask task = new WebBrowserTask();
+                            task.Uri = new Uri(url);
+                            task.Show();
+                            //NavigationService.RemoveBackEntry();
                         }
 
-
-                        loadPage(url);
                     }
-                    string title = "";
-                    if (NavigationContext.QueryString.TryGetValue("title", out title))
+                    else
                     {
-                        PageTitle.Text = title;
+
+                        string url = "";
+                        if (NavigationContext.QueryString.TryGetValue("href", out url))
+                        {
+                            CurrentPage = url;
+                            CurrentItem = App.ViewModel.getItemByURL(url);
+                            CurrentItem.Read = true;
+                            if (CurrentItem.Later)
+                            {
+                                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[2];
+                                btn.IconUri = new Uri("/img/readlater48.png", UriKind.Relative);
+                            }
+                            if (CurrentItem.Starred)
+                            {
+                                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[1];
+                                btn.IconUri = new Uri("/img/appbar.favs.rest.png", UriKind.Relative);
+                            }
+
+
+                            loadPage(url);
+                        }
+                        string title = "";
+                        if (NavigationContext.QueryString.TryGetValue("title", out title))
+                        {
+                            PageTitle.Text = title;
+                        }
                     }
                 }
-                
             }
             else
             {
@@ -278,6 +288,11 @@ namespace com.iCottrell.SEWorld
                 ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[1];
                 btn.IconUri = new Uri("/img/appbar.favs.addto.rest.png", UriKind.Relative);
             }
+        }
+
+        private void OpenAbout(object sender, EventArgs e)
+        {
+            this.NavigationService.Navigate(new Uri("/About.xaml", UriKind.Relative));
         }
 
     }
