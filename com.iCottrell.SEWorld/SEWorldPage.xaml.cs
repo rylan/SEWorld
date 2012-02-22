@@ -98,7 +98,7 @@ namespace com.iCottrell.SEWorld
                                     {
                                         try
                                         {
-                                            hl.NavigateUri = new Uri(att1.Value, UriKind.Relative);
+                                            hl.NavigateUri = new Uri("/SEWorldPage.xaml?external=true&href="+Uri.EscapeUriString(att1.Value), UriKind.Relative);
                                         }
                                         catch (Exception err)
                                         {
@@ -173,30 +173,46 @@ namespace com.iCottrell.SEWorld
             base.OnNavigatedTo(e);
             if (DeviceNetworkInformation.IsNetworkAvailable)
             {
-                string url = "";
-                if (NavigationContext.QueryString.TryGetValue("href", out url))
+                string external = "";
+                if (NavigationContext.QueryString.TryGetValue("external", out external))
                 {
-                    CurrentPage = url;
-                    CurrentItem = App.ViewModel.getItemByURL(url);
-                    CurrentItem.Read = true;
-                    if(CurrentItem.Later)
+                    string url = "";
+                    if (NavigationContext.QueryString.TryGetValue("href", out url))
                     {
-                        ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[2];
-                        btn.IconUri = new Uri("/img/readlater48.png", UriKind.Relative);
+                        WebBrowserTask task = new WebBrowserTask();
+                        task.Uri = new Uri(url);
+                        task.Show();
+                        NavigationService.RemoveBackEntry();
                     }
-                    if (CurrentItem.Starred)
-                    {
-                        ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[1];
-                        btn.IconUri = new Uri("/img/appbar.favs.rest.png", UriKind.Relative);
-                    }
-                    
-                    
-                    loadPage(url);
                 }
-                string title = "";
-                if (NavigationContext.QueryString.TryGetValue("title", out title))
+                else
                 {
-                    PageTitle.Text = title;
+
+                    string url = "";
+                    if (NavigationContext.QueryString.TryGetValue("href", out url))
+                    {
+                        CurrentPage = url;
+                        CurrentItem = App.ViewModel.getItemByURL(url);
+                        CurrentItem.Read = true;
+                        if (CurrentItem.Later)
+                        {
+                            ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[2];
+                            btn.IconUri = new Uri("/img/readlater48.png", UriKind.Relative);
+                        }
+                        if (CurrentItem.Starred)
+                        {
+                            ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[1];
+                            btn.IconUri = new Uri("/img/appbar.favs.rest.png", UriKind.Relative);
+                        }
+
+
+                        loadPage(url);
+                    }
+                    string title = "";
+                    if (NavigationContext.QueryString.TryGetValue("title", out title))
+                    {
+                        PageTitle.Text = title;
+                    }
                 }
                 
             }
