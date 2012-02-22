@@ -49,21 +49,6 @@ namespace com.iCottrell.SEWorld
             }
         }
 
-        public string ShortDescription
-        {
-            get
-            {
-                if (_description.Length > 150)
-                {
-                    return _description.Substring(0, 150);
-                }
-                else
-                {
-                    return _description;
-                }
-            }
-        }
-
         private string _url;
         public string URL
         {
@@ -142,6 +127,40 @@ namespace com.iCottrell.SEWorld
                 {
                     _read = value;
                     NotifyPropertyChanged("Read");
+                }
+            }
+        }
+
+        private Boolean _later;
+        public Boolean Later
+        {
+            get
+            {
+                return _later;
+            }
+            set
+            {
+                if (value != _later)
+                {
+                    _later = value;
+                    NotifyPropertyChanged("Later");
+                }
+            }
+        }
+
+        private Boolean _starred;
+        public Boolean Starred
+        {
+            get
+            {
+                return _starred;
+            }
+            set
+            {
+                if (value != _starred)
+                {
+                    _starred = value;
+                    NotifyPropertyChanged("Starred");
                 }
             }
         }

@@ -15,12 +15,14 @@ using System.Text;
 using Microsoft.Phone.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 using Microsoft.Phone.Tasks;
+using Microsoft.Phone.Shell;
 
 namespace com.iCottrell.SEWorld
 {
     public partial class SEWorldPage : PhoneApplicationPage
     {
         private String CurrentPage { get; set; }
+        private RSSItem CurrentItem { get; set; }
 
         public SEWorldPage()
         {
@@ -49,7 +51,9 @@ namespace com.iCottrell.SEWorld
                     if (htmlNode.Name.ToLower() == "pre")
                     {
                         /*webBrowser1.NavigateToString("<html><head><meta name='viewport' content='width=480, user-scalable=yes' />"
-                            + "<style>pre {font-size: 13px; white-space: pre-wrap; white-space: -moz-pre-wrap !important; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; _white-space: normal;} .tableframe {border-right: #999999 1px solid; border-top: #999999 1px solid; border-left: #999999 1px solid; border-bottom: #999999 1px solid } .tableframeinv {border-right: #F1F4FA 1px solid; border-top: #F1F4FA 1px solid; border-left: #F1F4FA 1px solid; border-bottom: #F1F4FA 1px solid }</style>"                            +"</head><body><table width='100%' cellpadding='2' cellspacing='0' border='0'><tr><td id='awesomepre'>"                            +htmlNode.InnerHtml+"</td></tr></table></body></html>");
+                            + "<style>pre {font-size: 13px; white-space: pre-wrap; white-space: -moz-pre-wrap !important; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; _white-space: normal;} .tableframe {border-right: #999999 1px solid; border-top: #999999 1px solid; border-left: #999999 1px solid; border-bottom: #999999 1px solid } .tableframeinv {border-right: #F1F4FA 1px solid; border-top: #F1F4FA 1px solid; border-left: #F1F4FA 1px solid; border-bottom: #F1F4FA 1px solid }</style>"
+                            +"</head><body><table width='100%' cellpadding='2' cellspacing='0' border='0'><tr><td id='awesomepre'>"
+                            +htmlNode.InnerHtml+"</td></tr></table></body></html>");
                         */
                         foreach (HtmlNode node in htmlNode.DescendantNodes().ToList())
                         {
@@ -173,6 +177,20 @@ namespace com.iCottrell.SEWorld
                 if (NavigationContext.QueryString.TryGetValue("href", out url))
                 {
                     CurrentPage = url;
+                    CurrentItem = App.ViewModel.getItemByURL(url);
+                    CurrentItem.Read = true;
+                    if(CurrentItem.Later)
+                    {
+                        ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[2];
+                        btn.IconUri = new Uri("/img/readlater48.png", UriKind.Relative);
+                    }
+                    if (CurrentItem.Starred)
+                    {
+                        ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[1];
+                        btn.IconUri = new Uri("/img/appbar.favs.rest.png", UriKind.Relative);
+                    }
+                    
+                    
                     loadPage(url);
                 }
                 string title = "";
@@ -198,6 +216,15 @@ namespace com.iCottrell.SEWorld
             }
         }
 
+        private void ShareEvent(object sender, EventArgs e)
+        {
+            ShareLinkTask slt = new ShareLinkTask();
+            slt.LinkUri = new Uri(CurrentPage);
+            slt.Title = "SEWorld News";
+            slt.Message = "Checkout " + PageTitle.Text;
+            slt.Show();
+        }
+
         private void EmailDev_Tap(object sender, EventArgs e)
         {
             EmailComposeTask emailComposeTask = new EmailComposeTask();
@@ -205,6 +232,36 @@ namespace com.iCottrell.SEWorld
             emailComposeTask.Body = "";
             emailComposeTask.Subject = "Feedback - SEWorld";
             emailComposeTask.Show();
+        }
+
+        private void ReadLaterEvent(object sender, EventArgs e)
+        {
+            App.ViewModel.setLaterByURL(CurrentPage);
+            if (CurrentItem.Later)
+            {
+                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[2];
+                btn.IconUri = new Uri("/img/readlater48.png", UriKind.Relative);
+            }
+            else
+            {
+                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[2];
+                btn.IconUri = new Uri("/img/readlateradd48.png", UriKind.Relative);
+            }
+        }
+
+        private void StarredEvent(object sender, EventArgs e)
+        {
+            App.ViewModel.setStarredByURL(CurrentPage);
+            if (CurrentItem.Starred)
+            {
+                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[1];
+                btn.IconUri = new Uri("/img/appbar.favs.rest.png", UriKind.Relative);
+            }
+            else
+            {
+                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[1];
+                btn.IconUri = new Uri("/img/appbar.favs.addto.rest.png", UriKind.Relative);
+            }
         }
 
     }

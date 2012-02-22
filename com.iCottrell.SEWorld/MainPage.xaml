@@ -19,13 +19,13 @@
     <Grid x:Name="LayoutRoot" Background="Transparent">
  
         <!--Panorama control-->
-        <controls:Panorama Title="SEWorld">
+        <controls:Panorama Name="PanoramaControls" Title="SEWorld">
             <controls:Panorama.Background>
                 <ImageBrush ImageSource="img/background.png"/>
             </controls:Panorama.Background>
  
             <!--Panorama latest news-->
-            <controls:PanoramaItem Header="news">
+            <controls:PanoramaItem Name="PINews" Header="news">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -34,7 +34,7 @@
                     
                     <ProgressBar Grid.Row="0" Name="Loading" IsIndeterminate="True" Visibility="Collapsed"/>
                     <!--Double line list with text wrapping-->
-                    <ListBox Grid.Row="1" Margin="0,0,-12,0" ItemsSource="{Binding RSSItems}">
+                    <ListBox Name="NewsItemsList" Grid.Row="1" Margin="0,0,-12,0" ItemsSource="{Binding NewsItems.View}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0,0,0,10" Tag="{Binding URL}" Width="432" DoubleTap="saveForLater" Tap="openRSSItem">
@@ -48,17 +48,15 @@
             </controls:PanoramaItem>
  
             <!--Panorama favorites-->
-            <controls:PanoramaItem Header="favorite">
+            <controls:PanoramaItem Name="PIImportant"  Header="starred">
                 <!--Double line list with image placeholder and text wrapping-->
-                <ListBox Margin="0,0,-12,0" ItemsSource="{Binding FavoriteItems}">
+                <ListBox Name="ImportantList" Margin="0,0,-12,0" ItemsSource="{Binding Starred.View}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,17">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                 <!--Replace rectangle with image-->
-                                <Rectangle Height="100" Width="100" Fill="#FFE5001b" Margin="12,0,9,0"/>
-                                <StackPanel Width="311">
-                                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}"/>
-                                </StackPanel>
+                                <Rectangle Width="20" Fill="#FFE5001b" Margin="12,0,9,0" Tag="{Binding URL}" Tap="removeStarred"/>
+                                <TextBlock Width="370" Text="{Binding Title}" Tag="{Binding URL}" Tap="openRSSItem" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -66,12 +64,12 @@
             </controls:PanoramaItem>
 
             <!--Panorama read later-->
-            <controls:PanoramaItem Header="read later">
+            <controls:PanoramaItem Name="PIRL" Header="read later">
                 <!--Double line list with text wrapping-->
-                <ListBox Margin="0,0,-12,0" ItemsSource="{Binding RLItems}">
+                <ListBox Name="ReadLaterList" Margin="0,0,-12,0" ItemsSource="{Binding ReadLater.View}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Margin="0,0,0,17" Width="432" Height="78">
+                            <StackPanel Margin="0,0,0,10" Tag="{Binding URL}" Width="432" Tap="openRSSItem">
                                 <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}"/>
                             </StackPanel>
                         </DataTemplate>

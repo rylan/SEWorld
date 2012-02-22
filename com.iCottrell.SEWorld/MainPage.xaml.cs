@@ -42,11 +42,12 @@ namespace com.iCottrell.SEWorld
         {
             Loading.Visibility = Visibility.Collapsed;
         }
+
         private void search_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                SearchButton.Focus();
+               SearchButton.Focus();
                runSearch();
             }
         }
@@ -83,13 +84,32 @@ namespace com.iCottrell.SEWorld
 
         private void saveForLater(object sender, GestureEventArgs e)
         {
-
+            string url = (string)((StackPanel)sender).Tag;
+            App.ViewModel.setLaterByURL(url);
         }
 
         private void openRSSItem(object sender, GestureEventArgs e)
         {
-            string url = (string)((StackPanel)sender).Tag;
-            string title = ((TextBlock) ((StackPanel)sender).Children[0]).Text;
+            string title = "";
+            string url = "";
+            if (sender is StackPanel)
+            {
+                url = (string)((StackPanel)sender).Tag;
+                
+                foreach (Object obj in ((StackPanel)sender).Children)
+                {
+                    if (obj is TextBlock)
+                    {
+                        title = ((TextBlock)obj).Text;
+                        break;
+                    }
+                }
+            }
+            else if (sender is TextBlock)
+            {
+                url = (string)((TextBlock)sender).Tag;
+                title = ((TextBlock)sender).Text;
+            }
 
             if (DeviceNetworkInformation.IsNetworkAvailable)
             {
@@ -100,5 +120,21 @@ namespace com.iCottrell.SEWorld
                 this.NavigationService.Navigate(new Uri("/ErrorPage.xaml", UriKind.Relative));
             }
         }
+
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+           base.OnNavigatedTo(e);
+           
+        }
+
+        private void removeStarred(object sender, GestureEventArgs e)
+        {
+            if (sender is Rectangle)
+            {
+                String url = (string)((Rectangle)sender).Tag;
+                App.ViewModel.setStarredByURL(url);
+            }
+        }
+
     }
 }

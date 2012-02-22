@@ -115,12 +115,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="PanoramaBackground.png" />
-    <Resource Include="img\appbar.delete.rest.png" />
+    <Content Include="img\appbar.delete.rest.png" />
     <Content Include="img\appbar.share.rest.png" />
     <Content Include="img\appbar.favs.addto.rest.png" />
     <Content Include="img\appbar.favs.rest.png" />
     <Content Include="img\background.png" />
     <Content Include="img\readlater48.png" />
+    <Content Include="img\readlateradd48.png" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />

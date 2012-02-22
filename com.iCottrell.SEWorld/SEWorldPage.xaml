@@ -38,9 +38,9 @@
     </Grid>
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton IconUri="/img/appbar.share.rest.png" Text="Share"/>
-            <shell:ApplicationBarIconButton x:Name="Important" IconUri="/img/appbar.favs.addto.rest.png" Text="Important"/>
-            <shell:ApplicationBarIconButton x:Name="ReadLater" IconUri="/img/readlater48.png" Text="Read Later"/>
+            <shell:ApplicationBarIconButton IconUri="/img/appbar.share.rest.png" Text="Share" Click="ShareEvent"/>
+            <shell:ApplicationBarIconButton IconUri="/img/appbar.favs.addto.rest.png" Text="Important" Click="StarredEvent"/>
+            <shell:ApplicationBarIconButton IconUri="/img/readlateradd48.png" Text="Read Later" Click="ReadLaterEvent"/>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="Open in web browser" Click="OpenInBrowser"/>
                 <shell:ApplicationBarMenuItem Text="Report Bug" Click="EmailDev_Tap"/>

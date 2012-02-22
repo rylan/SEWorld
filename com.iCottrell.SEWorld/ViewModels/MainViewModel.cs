@@ -70,10 +70,12 @@ namespace com.iCottrell.SEWorld
         /// </summary>
         public void LoadData()
         {
+            this.RSSItems.Clear();
             IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
             if (settings.Contains(RSS_LIST_SAVED))
             {
-                foreach (RSSItem ri in (ObservableCollection<RSSItem>)settings[RSS_LIST_SAVED])
+                ObservableCollection<RSSItem> list = (ObservableCollection<RSSItem>)settings[RSS_LIST_SAVED];
+                foreach (RSSItem ri in list)
                 {
                     this.RSSItems.Add(ri);
                 }
@@ -128,6 +130,7 @@ namespace com.iCottrell.SEWorld
                         }
                         item.ID = result.Element(web + "id").Value.Trim();
                         item.Read = false;
+                        item.Later = false;
                         item.DateAddedToList = DateTime.Now;
                         if(DateTime.TryParse(result.Element(web + "updated").Value.Trim(), out t))
                         {
@@ -171,28 +174,31 @@ namespace com.iCottrell.SEWorld
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
         {
-            if (propertyName == "RSSItemsRetrived")
+           IList<RSSItem> tmpItems = new List<RSSItem>(RSSItems);
+           RSSItems.Clear();
+           foreach (RSSItem p in tmpItems.OrderByDescending(x => x.Updated))
+           {
+             this.RSSItems.Add(p);
+           }
+               
+           tmpItems.Clear();
+            
+            
+            IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
+            if (!settings.Contains(RSS_LIST_SAVED))
             {
-                IList<RSSItem> tmpItems = new List<RSSItem>(RSSItems);
-                RSSItems.Clear();
-                foreach (RSSItem p in tmpItems.OrderByDescending(x => x.Updated))
-                {
-                    this.RSSItems.Add(p);
-
-                }
-                IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
-                if (!settings.Contains(RSS_LIST_SAVED))
-                {
-                    settings.Add(RSS_LIST_SAVED, this.RSSItems);
-                }
-                else
-                {
-                    settings[RSS_LIST_SAVED] = this.RSSItems;
-                }
-                tmpItems.Clear();
+                settings.Add(RSS_LIST_SAVED, this.RSSItems);
             }
-            
-            
+            else
+            {
+                settings[RSS_LIST_SAVED] = this.RSSItems;
+            }
+
+           
+            _NewsItems = null;
+            _ReadLater = null;
+            _Starred = null;
+
             PropertyChangedEventHandler handler = PropertyChanged;
             if (null != handler)
             {
@@ -269,6 +275,135 @@ namespace com.iCottrell.SEWorld
             }
             NotifyPropertyChanged("SearchItemsRetrived");
         }
-        
+
+        public RSSItem getItemByID(String id)
+        {
+            foreach (RSSItem i in this.RSSItems)
+            {
+                if (i.ID == id)
+                {
+                    return i;
+                }
+            }
+            return null;
+        }
+
+        public void setStarredByURL(String url)
+        {
+            foreach (RSSItem i in this.RSSItems)
+            {
+                if (i.URL == url)
+                {
+                    i.Starred = !i.Starred;
+                    break;
+                }
+            }
+            _NewsItems = null;
+            _Starred = null;
+            _ReadLater = null;
+
+            NewsItems.View.Refresh();
+            Starred.View.Refresh();
+            ReadLater.View.Refresh();
+            NotifyPropertyChanged("StarredUpdated");
+        }
+        public void setLaterByURL(String url)
+        {
+            foreach (RSSItem i in this.RSSItems)
+            {
+                if (i.URL == url)
+                {
+                    i.Later = !i.Later;
+                    break;
+                }
+            }
+            _NewsItems = null;
+            _Starred = null;
+            _ReadLater = null;
+
+            NewsItems.View.Refresh();
+            Starred.View.Refresh();
+            ReadLater.View.Refresh();
+            NotifyPropertyChanged("LaterUpdated");
+        }
+
+        public RSSItem getItemByURL(String url)
+        {
+            foreach (RSSItem i in this.RSSItems)
+            {
+                if (i.URL == url)
+                {
+                    return i;
+                }
+            }
+            return null;
+        }
+
+        private CollectionViewSource _NewsItems;
+        public CollectionViewSource NewsItems
+        {
+            get
+            {
+                if (null == _NewsItems)
+                {
+                    _NewsItems = new CollectionViewSource { Source = RSSItems };
+                    _NewsItems.View.Filter = (x) => FilterItemsByNewsItems(x);
+                }
+                return _NewsItems;
+            }
+        }
+        private bool FilterItemsByNewsItems(Object item)
+        {
+            if (item is RSSItem)
+            {
+                return !((RSSItem)item).Later && !((RSSItem)item).Starred;
+            }
+            return false;
+        }
+        private CollectionViewSource _ReadLater;
+        public CollectionViewSource ReadLater
+        {
+            get
+            {
+                if (null == _ReadLater)
+                {
+                    _ReadLater = new CollectionViewSource { Source = RSSItems };
+                    _ReadLater.View.Filter = (x) => FilterItemsByReadLater(x);
+                }
+                return _ReadLater;
+            }
+        }
+        private bool FilterItemsByReadLater(Object item)
+        {
+            if (item is RSSItem)
+            {
+                return ((RSSItem)item).Later;
+                
+            }
+            return false;
+        }
+
+        private CollectionViewSource _Starred;
+        public CollectionViewSource Starred
+        {
+            get
+            {
+                if (null == _Starred)
+                {
+                    _Starred = new CollectionViewSource { Source = RSSItems };
+                    _Starred.View.Filter = (x) => FilterItemsByStarred(x);
+                }
+                return _Starred;
+            }
+        }
+        private bool FilterItemsByStarred(Object item)
+        {
+            if (item is RSSItem)
+            {
+                return ((RSSItem)item).Starred;
+
+            }
+            return false;
+        }
     }
 }
