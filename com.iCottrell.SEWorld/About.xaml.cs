@@ -46,6 +46,6 @@ namespace com.iCottrell.SEWorld
             emailComposeTask.Subject = "Feedback - SEWorld";
             emailComposeTask.Show();
         }
-    }
+    
     }
 }

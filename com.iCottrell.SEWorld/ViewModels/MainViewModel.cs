@@ -24,8 +24,10 @@ namespace com.iCottrell.SEWorld
     public class MainViewModel : INotifyPropertyChanged
     {
         private string RSS_FEED = "http://listserv.acm.org/scripts/wa-acmlpx.exe?RSS&L=seworld&v=ATOM1.0";
-        public string RSS_UPDATED = "com.iCottrell.SEWorld.LastUpdated";
-        public string RSS_LIST_SAVED = "com.iCottrell.SEWorld.RSSListSaved";
+        public const string RSS_UPDATED = "com.iCottrell.SEWorld.LastUpdated";
+        public const string RSS_LIST_SAVED = "com.iCottrell.SEWorld.RSSListSaved";
+        public const string RSS_REMOVE_READ = "com.iCottrell.SEWorld.RSSRemoveRead";
+
         public MainViewModel()
         {
             this.RSSItems = new ObservableCollection<RSSItem>();
@@ -72,12 +74,28 @@ namespace com.iCottrell.SEWorld
         {
             this.RSSItems.Clear();
             IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
+            Boolean removeRead = false;
+            if (settings.Contains(RSS_REMOVE_READ))
+            {
+                removeRead = (Boolean)settings[RSS_REMOVE_READ];
+            }
             if (settings.Contains(RSS_LIST_SAVED))
             {
                 ObservableCollection<RSSItem> list = (ObservableCollection<RSSItem>)settings[RSS_LIST_SAVED];
                 foreach (RSSItem ri in list)
                 {
-                    this.RSSItems.Add(ri);
+                    if(removeRead)
+                    {
+                        if(!ri.Starred && !ri.Read && !ri.Read)
+                        {
+                            this.RSSItems.Add(ri); 
+                        }
+
+                    }
+                    else
+                    {
+                       this.RSSItems.Add(ri); 
+                    }
                 }
                 NotifyPropertyChanged("RSS_FEED_Loaded");
             }
@@ -174,17 +192,34 @@ namespace com.iCottrell.SEWorld
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
         {
+           IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
            IList<RSSItem> tmpItems = new List<RSSItem>(RSSItems);
            RSSItems.Clear();
-           foreach (RSSItem p in tmpItems.OrderByDescending(x => x.Updated))
+           Boolean removeRead = false;
+           if (settings.Contains(RSS_REMOVE_READ))
            {
-             this.RSSItems.Add(p);
+               removeRead = (Boolean)settings[RSS_REMOVE_READ];
+           }
+           foreach (RSSItem ri in tmpItems.OrderByDescending(x => x.Updated))
+           {
+               if (removeRead)
+               {
+                   if (!ri.Starred && !ri.Read && !ri.Read)
+                   {
+                       this.RSSItems.Add(ri);
+                   }
+
+               }
+               else
+               {
+                   this.RSSItems.Add(ri);
+               }
            }
                
            tmpItems.Clear();
             
             
-            IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
+            
             if (!settings.Contains(RSS_LIST_SAVED))
             {
                 settings.Add(RSS_LIST_SAVED, this.RSSItems);
