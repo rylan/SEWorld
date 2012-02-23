@@ -19,6 +19,11 @@ namespace com.iCottrell.SEWorld
         public Settings()
         {
             InitializeComponent();
+            IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
+            if (settings.Contains(MainViewModel.RSS_REMOVE_READ))
+            {
+               Removal.IsChecked = (Boolean)settings[MainViewModel.RSS_REMOVE_READ];
+            }
         }
 
         private void RecordUnChecked(object sender, RoutedEventArgs e)
@@ -32,6 +37,7 @@ namespace com.iCottrell.SEWorld
             {
                 settings[MainViewModel.RSS_REMOVE_READ] = false;
             }
+            settings.Save();
         }
 
         private void RecordChecked(object sender, RoutedEventArgs e)
@@ -45,6 +51,7 @@ namespace com.iCottrell.SEWorld
             {
                 settings[MainViewModel.RSS_REMOVE_READ] = true;
             }
+            settings.Save();
         }
     }
 }

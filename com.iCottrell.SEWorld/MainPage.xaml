@@ -127,8 +127,10 @@
     </Grid>
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/img/appbar.refresh.rest.png" Text="Refresh" Click="RefreshEvent"/>
+            <shell:ApplicationBarIconButton IconUri="/img/appbar.feature.settings.rest.png" Text="Refresh" Click="OpenSettings"/>
             <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="Settings" Click="OpenSettings"/>
+                
                 <shell:ApplicationBarMenuItem Text="About" Click="OpenAbout"/>
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>

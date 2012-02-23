@@ -203,7 +203,7 @@ namespace com.iCottrell.SEWorld
                         {
                             CurrentPage = url;
                             CurrentItem = App.ViewModel.getItemByURL(url);
-                            CurrentItem.Read = true;
+                            App.ViewModel.setReadByURL(url);
                             if (CurrentItem.Later)
                             {
                                 ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[2];

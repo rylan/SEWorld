@@ -146,5 +146,11 @@ namespace com.iCottrell.SEWorld
             this.NavigationService.Navigate(new Uri("/Settings.xaml", UriKind.Relative));
         }
 
+        private void RefreshEvent(object sender, EventArgs e)
+        {
+            Loading.Visibility = Visibility.Visible;
+            App.ViewModel.refresh();
+        }
+
     }
 }

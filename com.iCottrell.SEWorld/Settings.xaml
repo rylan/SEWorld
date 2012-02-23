@@ -51,8 +51,8 @@
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
-                <toolkit:ToggleSwitch Header="Removal Read Articles on Close" IsChecked="False" x:Name="Removal" Checked="RecordChecked" Unchecked="RecordUnChecked" />
-                <TextBlock TextWrapping="Wrap" Text="Doesn't effect articles that are marked as starred or read later." Style="{StaticResource PhoneTextSmallStyle}" />
+                <toolkit:ToggleSwitch Header="Remove read articles"  IsChecked="False" x:Name="Removal" Checked="RecordChecked" Unchecked="RecordUnChecked" />
+                <TextBlock TextWrapping="Wrap" Text="Takes effect on refreshes and on application close. Doesn't effect articles that are marked as starred or read later." Style="{StaticResource PhoneTextSmallStyle}" />
             </StackPanel>
             
             

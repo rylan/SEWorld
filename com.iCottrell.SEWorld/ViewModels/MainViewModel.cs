@@ -172,6 +172,7 @@ namespace com.iCottrell.SEWorld
                     {
                         settings[RSS_UPDATED] = DateTime.Now;
                     }
+                    settings.Save();
 
                     foreach (RSSItem ri in tmp.OrderByDescending(x => x.Updated))
                     {
@@ -193,13 +194,9 @@ namespace com.iCottrell.SEWorld
         private void NotifyPropertyChanged(String propertyName)
         {
            IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
-           IList<RSSItem> tmpItems = new List<RSSItem>(RSSItems);
+           IList<RSSItem> tmpItems = new List<RSSItem>(this.RSSItems);
            RSSItems.Clear();
-           Boolean removeRead = false;
-           if (settings.Contains(RSS_REMOVE_READ))
-           {
-               removeRead = (Boolean)settings[RSS_REMOVE_READ];
-           }
+                    
            foreach (RSSItem ri in tmpItems.OrderByDescending(x => x.Updated))
            {
                this.RSSItems.Add(ri);
@@ -217,7 +214,7 @@ namespace com.iCottrell.SEWorld
             {
                 settings[RSS_LIST_SAVED] = this.RSSItems;
             }
-
+            settings.Save();
            
             _NewsItems = null;
             _ReadLater = null;
@@ -331,6 +328,25 @@ namespace com.iCottrell.SEWorld
             ReadLater.View.Refresh();
             NotifyPropertyChanged("StarredUpdated");
         }
+        public void setReadByURL(String url)
+        {
+            foreach (RSSItem i in this.RSSItems)
+            {
+                if (i.URL == url)
+                {
+                    i.Read = true;
+                    break;
+                }
+            }
+            _NewsItems = null;
+            _Starred = null;
+            _ReadLater = null;
+
+            NewsItems.View.Refresh();
+            Starred.View.Refresh();
+            ReadLater.View.Refresh();
+            NotifyPropertyChanged("ReadUpdated");
+        }
         public void setLaterByURL(String url)
         {
             foreach (RSSItem i in this.RSSItems)
@@ -428,6 +444,49 @@ namespace com.iCottrell.SEWorld
 
             }
             return false;
+        }
+
+        public void refresh()
+        {
+            IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
+            Boolean removeRead = false;
+            if (settings.Contains(RSS_REMOVE_READ))
+            {
+                removeRead = (Boolean)settings[RSS_REMOVE_READ];
+            }
+            if (settings.Contains(RSS_LIST_SAVED))
+            {
+                IList<RSSItem> list = new List<RSSItem>(this.RSSItems);
+                this.RSSItems.Clear();
+                foreach (RSSItem ri in list)
+                {
+                    if (removeRead)
+                    {
+                        if (!ri.Read)
+                        {
+                            this.RSSItems.Add(ri);
+                        }
+                        else if (ri.Starred || ri.Later)
+                        {
+                            this.RSSItems.Add(ri);
+                        }
+
+                    }
+                    else
+                    {
+                        this.RSSItems.Add(ri);
+                    }
+                }
+                NotifyPropertyChanged("RSS_FEED_Loaded");
+            }
+
+
+
+            WebClient wc = new WebClient();
+            wc.OpenReadAsync(new Uri(RSS_FEED));
+            wc.OpenReadCompleted += new OpenReadCompletedEventHandler(parseRSSFeed);
+            this.IsDataLoaded = true;
+
         }
     }
 }

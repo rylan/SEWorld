@@ -124,6 +124,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="PanoramaBackground.png" />
+    <Content Include="img\appbar.refresh.rest.png" />
+    <Content Include="img\appbar.feature.settings.rest.png" />
     <Content Include="img\appbar.share.rest.png" />
     <Content Include="img\appbar.favs.addto.rest.png" />
     <Content Include="img\appbar.favs.rest.png" />
