@@ -50,11 +50,6 @@ namespace com.iCottrell.SEWorld
                 {
                     if (htmlNode.Name.ToLower() == "pre")
                     {
-                        /*webBrowser1.NavigateToString("<html><head><meta name='viewport' content='width=480, user-scalable=yes' />"
-                            + "<style>pre {font-size: 13px; white-space: pre-wrap; white-space: -moz-pre-wrap !important; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; _white-space: normal;} .tableframe {border-right: #999999 1px solid; border-top: #999999 1px solid; border-left: #999999 1px solid; border-bottom: #999999 1px solid } .tableframeinv {border-right: #F1F4FA 1px solid; border-top: #F1F4FA 1px solid; border-left: #F1F4FA 1px solid; border-bottom: #F1F4FA 1px solid }</style>"
-                            +"</head><body><table width='100%' cellpadding='2' cellspacing='0' border='0'><tr><td id='awesomepre'>"
-                            +htmlNode.InnerHtml+"</td></tr></table></body></html>");
-                        */
                         foreach (HtmlNode node in htmlNode.DescendantNodes().ToList())
                         {
                             if (paragraph.Inlines.Count > 0)
@@ -191,9 +186,7 @@ namespace com.iCottrell.SEWorld
                             WebBrowserTask task = new WebBrowserTask();
                             task.Uri = new Uri(url);
                             task.Show();
-                            //NavigationService.RemoveBackEntry();
                         }
-
                     }
                     else
                     {
@@ -201,22 +194,26 @@ namespace com.iCottrell.SEWorld
                         string url = "";
                         if (NavigationContext.QueryString.TryGetValue("href", out url))
                         {
+                           // if (!url.Contains("http://"))
+                           // {
+                           //     url = "http://listserv.acm.org" + url + "&L=seworld&P=R7512&1=seworld&9=A&J=on&d=No+Match%3BMatch%3BMatches&z=4";
+                           // }
                             CurrentPage = url;
-                            CurrentItem = App.ViewModel.getItemByURL(url);
-                            App.ViewModel.setReadByURL(url);
-                            if (CurrentItem.Later)
+                            CurrentItem = App.ViewModel.getItemByURL(CurrentPage);
+                            App.ViewModel.setReadByURL(CurrentPage);
+                            if (CurrentItem != null && CurrentItem.Later)
                             {
-                                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[2];
+                                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[3];
                                 btn.IconUri = new Uri("/img/readlater48.png", UriKind.Relative);
                             }
-                            if (CurrentItem.Starred)
+                            if (CurrentItem != null && CurrentItem.Starred)
                             {
-                                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[1];
+                                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[2];
                                 btn.IconUri = new Uri("/img/appbar.favs.rest.png", UriKind.Relative);
                             }
 
 
-                            loadPage(url);
+                            loadPage(CurrentPage);
                         }
                         string title = "";
                         if (NavigationContext.QueryString.TryGetValue("title", out title))
@@ -262,30 +259,45 @@ namespace com.iCottrell.SEWorld
 
         private void ReadLaterEvent(object sender, EventArgs e)
         {
-            App.ViewModel.setLaterByURL(CurrentPage);
+            if (CurrentItem == null)
+            {
+                CurrentItem = App.ViewModel.addItem(PageTitle.Text, "", CurrentPage, "", DateTime.Now, true, true, false);
+            }
+            else
+            {
+                App.ViewModel.setLaterByURL(CurrentPage);
+            }
+            
             if (CurrentItem.Later)
             {
-                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[2];
+                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[3];
                 btn.IconUri = new Uri("/img/readlater48.png", UriKind.Relative);
             }
             else
             {
-                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[2];
+                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[3];
                 btn.IconUri = new Uri("/img/readlateradd48.png", UriKind.Relative);
             }
         }
 
         private void StarredEvent(object sender, EventArgs e)
         {
-            App.ViewModel.setStarredByURL(CurrentPage);
+            if (CurrentItem == null)
+            {
+                CurrentItem = App.ViewModel.addItem(PageTitle.Text, "", CurrentPage, "", DateTime.Now, true, false,true);
+            }
+            else
+            {
+                App.ViewModel.setStarredByURL(CurrentPage);
+            }
             if (CurrentItem.Starred)
             {
-                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[1];
+                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[2];
                 btn.IconUri = new Uri("/img/appbar.favs.rest.png", UriKind.Relative);
             }
             else
             {
-                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[1];
+                ApplicationBarIconButton btn = (ApplicationBarIconButton)ApplicationBar.Buttons[2];
                 btn.IconUri = new Uri("/img/appbar.favs.addto.rest.png", UriKind.Relative);
             }
         }
@@ -293,6 +305,14 @@ namespace com.iCottrell.SEWorld
         private void OpenAbout(object sender, EventArgs e)
         {
             this.NavigationService.Navigate(new Uri("/About.xaml", UriKind.Relative));
+        }
+
+        private void EmailEvent(object sender, EventArgs e)
+        {
+            EmailComposeTask emailComposeTask = new EmailComposeTask();
+            emailComposeTask.Body = "Check out this posting " +PageTitle.Text+" to SEWOLRD. "+CurrentPage;
+            emailComposeTask.Subject = "SEWorld";
+            emailComposeTask.Show();
         }
 
     }

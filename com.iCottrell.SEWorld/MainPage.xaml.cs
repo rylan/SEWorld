@@ -41,6 +41,7 @@ namespace com.iCottrell.SEWorld
         private void NotifyPropertyChanged(Object sender, PropertyChangedEventArgs e)
         {
             Loading.Visibility = Visibility.Collapsed;
+            Searching.Visibility = Visibility.Collapsed;
         }
 
         private void search_KeyDown(object sender, KeyEventArgs e)
@@ -66,6 +67,7 @@ namespace com.iCottrell.SEWorld
         {
             if (this.SearchBox.Text != "" && DeviceNetworkInformation.IsNetworkAvailable)
             {
+                Searching.Visibility = Visibility.Visible;
                 String str = this.SearchBox.Text.Trim();
                 str = str.Replace(" ", "%20");
                 App.ViewModel.callSearch(str);
@@ -113,7 +115,7 @@ namespace com.iCottrell.SEWorld
 
             if (DeviceNetworkInformation.IsNetworkAvailable)
             {
-                this.NavigationService.Navigate(new Uri("/SEWorldPage.xaml?title="+title+"&href="+Uri.EscapeUriString(url), UriKind.Relative));
+                this.NavigationService.Navigate(new Uri("/SEWorldPage.xaml?title="+title+"&href="+Uri.EscapeDataString(url), UriKind.Relative));
             }
             else
             {

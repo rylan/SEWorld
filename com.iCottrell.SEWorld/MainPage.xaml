@@ -62,7 +62,6 @@
                             <DataTemplate>
                                 <StackPanel Margin="0,0,0,10" Tag="{Binding URL}" Width="432" DoubleTap="saveForLater" Tap="openRSSItem">
                                     <TextBlock Text="{Binding Title}" TextWrapping="Wrap"  Loaded="textLoaded" Tag="{Binding Read}" Style="{StaticResource PhoneTextNormalStyle}" FontWeight="Bold"  />
-                                    <!--<TextBlock Text="{Binding Description}" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>-->
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -107,15 +106,17 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    
-                    <StackPanel Orientation="Horizontal" Grid.Row="0">
-                        <TextBox Name="SearchBox" Width="300" Height="78"  KeyDown="search_KeyDown"/>
-                        <Button Name="SearchButton" Content="Search" Height="78" Click="searchButton_Click" />
+                    <StackPanel Grid.Row="0">
+                        <StackPanel Orientation="Horizontal" >
+                            <TextBox Name="SearchBox" Width="300" Height="78"  KeyDown="search_KeyDown"/>
+                            <Button Name="SearchButton" Content="Search" Height="78" Click="searchButton_Click" />
+                        </StackPanel>
+                        <ProgressBar Name="Searching" IsIndeterminate="True" Visibility="Collapsed"/>
                     </StackPanel>
                     <ListBox Grid.Row="1" Margin="0,0,-12,0" ItemsSource="{Binding SearchItems}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Margin="0,0,0,17" Width="432" Height="78">
+                                <StackPanel Margin="0,0,0,17" Tag="{Binding URL}" Width="432" Tap="openRSSItem" >
                                     <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}"/>
                              </StackPanel>
                          </DataTemplate>

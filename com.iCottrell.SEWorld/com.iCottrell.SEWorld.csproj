@@ -83,7 +83,6 @@
     <Compile Include="SEWorldPage.xaml.cs">
       <DependentUpon>SEWorldPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\RSSItem.cs" />
     <Compile Include="ViewModels\SearchItem.cs" />
@@ -124,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="PanoramaBackground.png" />
+    <Content Include="img\appbar.feature.email.rest.png" />
     <Content Include="img\appbar.refresh.rest.png" />
     <Content Include="img\appbar.feature.settings.rest.png" />
     <Content Include="img\appbar.share.rest.png" />

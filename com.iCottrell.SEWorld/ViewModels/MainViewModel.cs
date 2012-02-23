@@ -17,6 +17,7 @@ using System.Net;
 using System.Xml.Linq;
 using System.IO.IsolatedStorage;
 using HtmlAgilityPack;
+using Microsoft.Phone.Net.NetworkInformation;
 
 
 namespace com.iCottrell.SEWorld
@@ -189,6 +190,23 @@ namespace com.iCottrell.SEWorld
             }
         }
 
+        public RSSItem addItem(string title, string description, string url, string id, DateTime date, Boolean read, Boolean later, Boolean starred)
+        {
+            RSSItem item = new RSSItem();
+            item.Title = title;
+            item.Description = description;
+            item.URL = url;
+            item.ID = id;
+            item.Read = read;
+            item.Later = later;
+            item.Starred = starred;
+            item.Updated = date;
+            item.DateAddedToList = date;
+            this.RSSItems.Add(item);
+            NotifyPropertyChanged("RSSItemsAdded");
+            return item;
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
@@ -268,7 +286,7 @@ namespace com.iCottrell.SEWorld
                                         {
                                             if (at.Name.ToLower() == "href")
                                             {
-                                                st.URL = at.Value;
+                                                st.URL = "http://listserv.acm.org" + at.Value;
                                             }
                                         }
                                     }
@@ -480,11 +498,12 @@ namespace com.iCottrell.SEWorld
                 NotifyPropertyChanged("RSS_FEED_Loaded");
             }
 
-
-
-            WebClient wc = new WebClient();
-            wc.OpenReadAsync(new Uri(RSS_FEED));
-            wc.OpenReadCompleted += new OpenReadCompletedEventHandler(parseRSSFeed);
+            if (DeviceNetworkInformation.IsNetworkAvailable)
+            {
+                WebClient wc = new WebClient();
+                wc.OpenReadAsync(new Uri(RSS_FEED));
+                wc.OpenReadCompleted += new OpenReadCompletedEventHandler(parseRSSFeed);
+            }
             this.IsDataLoaded = true;
 
         }
