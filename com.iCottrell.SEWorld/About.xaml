@@ -50,7 +50,8 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <StackPanel VerticalAlignment="Top" Height="422" Margin="0,0,0,0">
+            <StackPanel VerticalAlignment="Top" Height="622" Margin="0,0,0,0">
+                <Image Source="/img/icon173.png" Width="173" HorizontalAlignment="Left"/>
                 <RichTextBox VerticalContentAlignment="Top">
                     <Paragraph>
                         <Bold FontSize="26">SEWorld</Bold>
