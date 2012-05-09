@@ -58,6 +58,7 @@ namespace com.iCottrell.SEWorld
         {
             if (e.Key == Key.Enter)
             {
+               Searching.Visibility = Visibility.Visible;
                SearchButton.Focus();
                runSearch();
             }

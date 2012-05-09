@@ -49,7 +49,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HtmlAgilityPack">
-      <HintPath>..\..\..\..\Downloads\Trunk\HAPPhone\Bin\Debug\HtmlAgilityPack.dll</HintPath>
+      <HintPath>..\..\..\..\..\Downloads\htmlagilitypack-77494\Trunk\HAPPhone\Bin\Debug\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Controls" />

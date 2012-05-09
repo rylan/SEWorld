@@ -118,7 +118,13 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0">
                         <StackPanel Orientation="Horizontal" >
-                            <TextBox Name="SearchBox" Width="300" Height="78"  KeyDown="search_KeyDown"/>
+                            <TextBox Name="SearchBox" Width="300" Height="78"  KeyDown="search_KeyDown">
+                                <TextBox.InputScope>
+                                    <InputScope>
+                                        <InputScopeName NameValue="Search"/>
+                                    </InputScope>
+                                </TextBox.InputScope>
+                            </TextBox>
                             <Button Name="SearchButton" Content="Search" Height="78" Click="searchButton_Click" />
                         </StackPanel>
                         <ProgressBar Name="Searching" IsIndeterminate="True" Visibility="Collapsed"/>
